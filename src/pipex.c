@@ -6,7 +6,7 @@
 /*   By: anshimiy <anshimiy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/27 14:03:45 by anshimiy          #+#    #+#             */
-/*   Updated: 2022/10/27 17:44:28 by anshimiy         ###   ########.fr       */
+/*   Updated: 2022/10/28 16:02:12 by anshimiy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,7 @@ char	*find_path(char *cmd, char **envp)
 		free(path);
 		i++;
 	}
-	i = -1;
-	while (paths[++i])
-		free(paths[i]);
-	free(paths);
+	ft_free_str_array(paths);
 	return (0);
 }
 
@@ -56,13 +53,11 @@ void	execute(char *argv, char **envp)
 	path = find_path(cmd[0], envp);
 	if (!path)	
 	{
-		while (cmd[++i])
-			free(cmd[i]);
-		free(cmd);
-		throw_error("Error occured at execute", -1);
+		ft_free_str_array(cmd);
+		throw_error("Error occured at execute", 1);
 	}
 	if (execve(path, cmd, envp) == -1)
-		throw_error("Error occured at execute", -1);
+		throw_error("Error occured at execute", 1);
 }
 
 void child_process(char **argv, char **envp, int *fd)
@@ -71,11 +66,11 @@ void child_process(char **argv, char **envp, int *fd)
 
 	filein = open(argv[1], O_RDONLY, 0777);
     if (filein == -1)
-		throw_error("Error occured at child process", -1);
+		throw_error("Error occured at child process", 1);
     if (dup2(fd[1], STDIN_FILENO) < 0)
-        throw_error("Error occured at child process", -1);
+        throw_error("Error occured at child process", 1);
     if (dup2(filein, STDOUT_FILENO) < 0)
-        throw_error("Error occured at child process", -1);
+        throw_error("Error occured at child process", 1);
     close(fd[0]);
     execute(argv[2], envp);
 }
