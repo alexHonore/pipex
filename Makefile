@@ -12,6 +12,14 @@
 
 NAME = pipex
 
+# Hide calls
+export VERBOSE	=	FALSE
+ifeq ($(VERBOSE),TRUE)
+	HIDE =
+else
+	HIDE = @
+endif
+
 SRCDIR = src/
 SRCS =  src/main.c			\
 		src/pipex.c			\
@@ -24,11 +32,10 @@ RM = rm -rf
 OBJDIR	=	bin/
 OBJS	=	$(patsubst $(SRCDIR)%.c,$(OBJDIR)%.o,$(SRCS))
 
-
 all: $(NAME)
 
 $(NAME):	$(OBJS)
-	make -C ./my_lib
+	$(HIDE) make -C ./my_lib
 	$(HIDE) $(CC) $(CFLAGS) $(OBJS) -o $(NAME) ./my_lib/mylib.a
 
 # Compiles sources into objects

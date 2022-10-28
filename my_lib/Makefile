@@ -12,6 +12,14 @@
 
 NAME = mylib.a
 
+# Hide calls
+export VERBOSE	=	FALSE
+ifeq ($(VERBOSE),TRUE)
+	HIDE =
+else
+	HIDE = @
+endif
+
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror
 AR = ar rcs
@@ -77,7 +85,7 @@ SRCS = src/ft_isalpha.c \
 BONUS_OBJ = $(BONUS_FILES:.c=.o)
 
 $(NAME): $(OBJS)
-	$(AR) $(NAME) $(OBJS)
+	$(HIDE) $(AR) $(NAME) $(OBJS)
 
 # Compiles sources into objects
 $(OBJS): $(OBJDIR)%.o : $(SRCDIR)%.c| $(OBJDIR)
